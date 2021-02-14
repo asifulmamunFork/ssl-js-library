@@ -14,7 +14,7 @@ export const SSLPayment = (function () {
     <style>
         .payment-close-button{
             font-size: 18px;
-            line-height: 1;
+            line-height: 20px;
             color: #000;
             text-shadow: 0 1px 0 #fff;
             filter: alpha(opacity=20);
@@ -43,13 +43,13 @@ export const SSLPayment = (function () {
         }
         .payment-modal-header > .payment-logo{
             position: absolute;
-            top: 10px;
-            left: 0;
-            right: 0;
+            top: 10px; 
             z-index: 999;
             text-align: center; 
             border-top-right-radius: 5px;
             border-top-left-radius: 5px;
+            left: 100px;
+            right: 100px;
         }
         .payment-modal-container.payment-active {
             opacity: 1;
@@ -144,19 +144,16 @@ export const SSLPayment = (function () {
       paymentModalHide()
     });
 
-    window.addEventListener("message", function (event) {
-
-
+    window.addEventListener("message", function (event) { 
       if (event.origin === 'https://sandbox.sslcommerz.com' || event.origin === 'https://epay.sslcommerz.com') {
         let data = JSON.parse(event.data);
-        if (data.type == 'otp') {
+        if (data.type == 'otp' || data.type == 'gw_redirect') {
           window.location.replace(data.url);
         }
 
         if (data.type == 'resize') {
           $('body').find("#ssl-payment-modal").find(".payment-modal-body iframe").height(parseFloat(data.height) + 5)
         }
-
       }
     });
 
