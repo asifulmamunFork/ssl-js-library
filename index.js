@@ -5,7 +5,7 @@ website:http://alemran.me
 
 export const SSLPayment = (function () {
 
-// variable defining
+  // variable defining
   let cssPrepend = false;
 
 
@@ -33,19 +33,23 @@ export const SSLPayment = (function () {
         }
     
         .payment-modal-header{
-            position: relative;
-            padding-bottom: 35px;
+          position: relative;
+          padding-bottom: 35px;
+          background: white;
+          margin-bottom: -10px;
         }
         .payment-modal-header > .payment-logo > .payment-logo-img{
-            max-width: 90px;
+            max-height: 60px !important;
         }
         .payment-modal-header > .payment-logo{
             position: absolute;
-            top: -50px;
+            top: 10px;
             left: 0;
             right: 0;
             z-index: 999;
-            text-align: center;
+            text-align: center; 
+            border-top-right-radius: 5px;
+            border-top-left-radius: 5px;
         }
         .payment-modal-container.payment-active {
             opacity: 1;
@@ -70,7 +74,7 @@ export const SSLPayment = (function () {
             transition: all .6s;
         }
         .payment-modal-content{
-            background-color: #fff;
+            background-color: transparent;
         }
         .payment-modal-body{
             position: relative;
@@ -78,11 +82,12 @@ export const SSLPayment = (function () {
             margin-top: auto;
             margin-bottom: auto;
             width: 340px;
-            border-radius: 6px;
-            background: #fff;
+            border-radius: 6px; 
             opacity: 1;
             cursor: auto;
             transition: transform .3s cubic-bezier(.175, .885, .32, 1.275);
+            padding-bottom: 100px;
+            background-color: transparent;
         }
         .payment-modal-body > iframe{
             border: none;
@@ -114,7 +119,6 @@ export const SSLPayment = (function () {
   }
 
 
-
   const paymentModal = function (paymentURL, logo) {
     return `
 	 <div class="payment-modal-container">
@@ -134,17 +138,25 @@ export const SSLPayment = (function () {
      </div>`;
   }
 
-  const modalEvent = function(){
-    $('body').find("#ssl-payment-modal").on('click', ".payment-close-button", function(){
-      paymentModalHide()
-    })
+  const modalEvent = function () {
 
-    window.addEventListener("message", function(event){
-      if(event.origin === 'https://sandbox.sslcommerz.com'){
+    $('body').find("#ssl-payment-modal").on('click', ".payment-close-button", function () {
+      paymentModalHide()
+    });
+
+    window.addEventListener("message", function (event) {
+
+
+      if (event.origin === 'https://sandbox.sslcommerz.com' || event.origin === 'https://epay.sslcommerz.com') {
         let data = JSON.parse(event.data);
-        if(data.type == 'otp'){
+        if (data.type == 'otp') {
           window.location.replace(data.url);
         }
+
+        if (data.type == 'resize') {
+          $('body').find("#ssl-payment-modal").find(".payment-modal-body iframe").height(parseFloat(data.height) + 5)
+        }
+
       }
     });
 
@@ -153,9 +165,9 @@ export const SSLPayment = (function () {
 
   let AddStylehtmlData = function () {
     $('body').prepend(cssContent);
-    $('body').append('<div id="ssl-payment-modal"></div>') ;
+    $('body').append('<div id="ssl-payment-modal"></div>');
     cssPrepend = true;
-    setTimeout(()=>{
+    setTimeout(() => {
       modalEvent();
     }, 200)
   }
