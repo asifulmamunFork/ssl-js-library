@@ -22,13 +22,11 @@
   <code>
   function sslPay(){
     SSLPayment.OpenModalWithRequest( your Ednpoint URL ,{data});
-  }
- <code>
-
+  }</code>
+ 
   #For custom request:  Open Payment Modal Only:
-    Request to your endpoint with axios/ajax/fetch then call following functionif status is success:
+   Request to your endpoint with axios/ajax/fetch then call following functionif status is success:
    <code>
     function sslPay(){
     SSLPayment.OpenModal( payment_url_from_ssl , logo_url);
-    }
-   </code>
+    }</code>
