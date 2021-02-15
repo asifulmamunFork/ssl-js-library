@@ -19,12 +19,16 @@
 
 2.Request to Your Endpoint with any event:
   #For Request and Open Payment Modal:
+  <code>
   function sslPay(){
     SSLPayment.OpenModalWithRequest( your Ednpoint URL ,{data});
   }
+ <code>
 
   #For custom request:  Open Payment Modal Only:
     Request to your endpoint with axios/ajax/fetch then call following functionif status is success:
-   function sslPay(){
+   <code>
+    function sslPay(){
     SSLPayment.OpenModal( payment_url_from_ssl , logo_url);
     }
+   </code>
