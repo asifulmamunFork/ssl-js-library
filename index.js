@@ -5,14 +5,13 @@ website:http://alemran.me
 
 export const SSLPayment = (function () {
 
-  // variable defining
+// variable defining
   let cssPrepend = false;
 
 
   // set stylesheet as constants
   const cssContent = `
-    <style>
-        .payment-close-button{
+    .payment-close-button{
             font-size: 18px;
             line-height: 20px;
             color: #000;
@@ -102,19 +101,19 @@ export const SSLPayment = (function () {
         body.payment-modal-active{
             overflow-y: hidden !important;
         }
-    </style>`;
+     `;
 
 
   const paymentModalOpen = function () {
-    $(".payment-modal-container").addClass('payment-active');
-    $("body").addClass('payment-modal-active');
+    document.querySelector('#ssl-payment-modal .payment-modal-container').classList.add('payment-active');
+    document.querySelector('body').classList.add('payment-modal-active');
   };
 
   const paymentModalHide = function () {
-    $(".payment-modal-container").removeClass('payment-active');
-    $("body").removeClass('payment-modal-active');
+    document.querySelector('#ssl-payment-modal .payment-modal-container').classList.remove('payment-active');
+    document.querySelector('body').classList.remove('payment-modal-active');
     setTimeout(() => {
-      $("body").find("#ssl-payment-modal").html('')
+      document.querySelector("#ssl-payment-modal").innerHTML = '';
     }, 300)
   }
 
@@ -140,11 +139,15 @@ export const SSLPayment = (function () {
 
   const modalEvent = function () {
 
-    $('body').find("#ssl-payment-modal").on('click', ".payment-close-button", function () {
-      paymentModalHide()
-    });
+    document.querySelector("#ssl-payment-modal").addEventListener("click", function (event) {
+      event.stopPropagation();
+      if (event.target.classList.contains('payment-close-button')) {
+        paymentModalHide()
+      }
+    }, false);
 
-    window.addEventListener("message", function (event) { 
+    window.addEventListener("message", function (event) {
+
       if (event.origin === 'https://sandbox.sslcommerz.com' || event.origin === 'https://epay.sslcommerz.com') {
         let data = JSON.parse(event.data);
         if (data.type == 'otp' || data.type == 'gw_redirect') {
@@ -152,7 +155,7 @@ export const SSLPayment = (function () {
         }
 
         if (data.type == 'resize') {
-          $('body').find("#ssl-payment-modal").find(".payment-modal-body iframe").height(parseFloat(data.height) + 5)
+          document.querySelector("#ssl-payment-modal .payment-modal-body iframe").style.height = (parseFloat(data.height) + 5) + 'px'
         }
       }
     });
@@ -161,8 +164,14 @@ export const SSLPayment = (function () {
   };
 
   let AddStylehtmlData = function () {
-    $('body').prepend(cssContent);
-    $('body').append('<div id="ssl-payment-modal"></div>');
+    let body = document.querySelector('body');
+    let style = document.createElement('style');
+    style.innerHTML = cssContent;
+    body.parentNode.insertBefore(style, body);
+
+    let paymentModal =  document.createElement('div');
+    paymentModal.id = "ssl-payment-modal";
+    body.append(paymentModal);
     cssPrepend = true;
     setTimeout(() => {
       modalEvent();
@@ -190,7 +199,7 @@ export const SSLPayment = (function () {
           let paymentURL = data.data + '?full=1';
           let logo = data.logo
           let content = paymentModal(paymentURL, logo);
-          $("body").find("#ssl-payment-modal").html(content)
+          document.querySelector("#ssl-payment-modal").innerHTML = content;
           setTimeout(() => {
             paymentModalOpen()
           }, 100)
@@ -213,7 +222,7 @@ export const SSLPayment = (function () {
     }
 
     let content = paymentModal(paymentURL + '?full=1', logo);
-    $("body").find("#ssl-payment-modal").html(content);
+    document.querySelector("#ssl-payment-modal").innerHTML = content;
     setTimeout(() => {
       paymentModalOpen()
     }, 100)
